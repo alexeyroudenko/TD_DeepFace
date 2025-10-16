@@ -1,0 +1,25 @@
+version: '3.8'
+services:
+  deepface:
+    build: ./deepface_service
+    container_name: deepface_service
+    platform: linux/amd64
+    restart: unless-stopped
+    environment: 
+      - TF_CPP_MIN_LOG_LEVEL=3
+      - TF_ENABLE_ONEDNN_OPTS=0
+      - CUDA_VISIBLE_DEVICES=-1
+      - PYTHONWARNINGS=ignore
+      - KMP_AFFINITY=noverbose
+    volumes:
+      - ./deepface_service/tmp:/tmp
+      - ./deepface_service:/app
+      - ./weights:/root/.deepface/weights
+    ports:
+      - "8000:8000"
+    networks:
+      - deepface_network
+
+networks:
+  deepface_network:
+    driver: bridge
